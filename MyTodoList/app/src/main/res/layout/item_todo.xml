@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/todo_item_bg"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <CheckBox
+        android:id="@+id/cb_item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layoutDirection="ltr"
+        android:textColor="@color/todo_item_text_color"
+        android:textSize="14sp"
+        tools:text="This is the sample item" />
+
+    <TextView
+        android:id="@+id/tv_item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/todo_item_text_color"
+        android:paddingStart="8dp"
+        android:gravity="center_vertical"
+        android:textSize="14sp"
+        android:paddingVertical="15dp"
+        tools:text="This is the sample item" />
+
+</LinearLayout>
