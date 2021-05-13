@@ -2,6 +2,7 @@ package asb.mytodolist;
 
 import android.content.DialogInterface;
 import android.graphics.Rect;
+import android.os.AsyncTask;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
@@ -19,6 +20,7 @@ import java.util.List;
 import java.util.UUID;
 
 import asb.mytodolist.base.BaseActivity;
+import asb.mytodolist.dao.TodoItemDao;
 import asb.mytodolist.databinding.ActivityMainBinding;
 import asb.mytodolist.models.TodoItem;
 import asb.mytodolist.utils.DeviceUtils;
@@ -92,6 +94,7 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
     }
 
     private void getStoredData() {
+        items = TodoListApp.getAppDatabase().itemDao().getAll();
     }
 
     private void initView() {
@@ -119,16 +122,6 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
         };
 
         binding.itemsRV.setAdapter(adapter);
-
-        items.add(new TodoItem(UUID.randomUUID().toString(), "1", false));
-        items.add(new TodoItem(UUID.randomUUID().toString(), "2", false));
-        items.add(new TodoItem(UUID.randomUUID().toString(), "3", false));
-        items.add(new TodoItem(UUID.randomUUID().toString(), "4", false));
-        items.add(new TodoItem(UUID.randomUUID().toString(), "5", false));
-        items.add(new TodoItem(UUID.randomUUID().toString(), "6", false));
-        items.add(new TodoItem(UUID.randomUUID().toString(), "7", false));
-        items.add(new TodoItem(UUID.randomUUID().toString(), "8", false));
-
         adapter.setData(items);
     }
 
@@ -136,11 +129,14 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
         binding.addBtn.setOnClickListener(view -> {
             CharSequence newListTitle = binding.newItemText.getText();
             if (newListTitle != null && newListTitle.length() > 0) {
-                items.add(new TodoItem(UUID.randomUUID().toString(), newListTitle.toString(), false));
+                TodoItem newItem = new TodoItem(UUID.randomUUID().toString(), newListTitle.toString(), false);
+                TodoListApp.getAppDatabase().itemDao().insert(newItem);
+                items.add(newItem);
                 adapter.notifyDataSetChanged();
+
                 binding.itemsRV.smoothScrollToPosition(items.size());
                 binding.newItemText.setText(null);
-                Toast.makeText(this, "Add new item: " + newListTitle + "successfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Add new item: " + newListTitle + " successfully", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, "Please enter valid content", Toast.LENGTH_SHORT).show();
             }
