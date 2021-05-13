@@ -40,6 +40,11 @@ public abstract class ToDoItemRVAdapter extends RecyclerView.Adapter<TodoItemVie
         notifyDataSetChanged();
     }
 
+    public void remove(TodoItem data) {
+        this.mListData.remove(data);
+        notifyDataSetChanged();
+    }
+
     @NonNull
     @Override
     public TodoItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

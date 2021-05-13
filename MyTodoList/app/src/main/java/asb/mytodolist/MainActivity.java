@@ -1,5 +1,6 @@
 package asb.mytodolist;
 
+import android.content.DialogInterface;
 import android.graphics.Rect;
 import android.provider.Settings;
 import android.util.Log;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -51,12 +53,33 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
                 item.setTitle(adapter.isInCheckingMode() ? "Lock" : "Unlock");
                 mMenu.findItem(R.id.action_delete).setVisible(adapter.isInCheckingMode());
                 return true;
+            case R.id.action_delete:
+                executeItemRemoval();
+                return true;
             default:
                 // If we got here, the user's action was not recognized.
                 // Invoke the superclass to handle it.
                 return super.onOptionsItemSelected(item);
 
         }
+    }
+
+    private void executeItemRemoval() {
+        new AlertDialog.Builder(this)
+                .setMessage("Are you sure want to delete these items")
+                .setPositiveButton("Ok", (dialogInterface, i) -> {
+                    List<TodoItem> notFinishedItems = new ArrayList<>();
+                    for (TodoItem item : items)
+                        if (!item.isFinished())
+                        {
+                            notFinishedItems.add(item);
+                        }
+                    items = notFinishedItems;
+                    adapter.setData(notFinishedItems);
+                })
+                .setNegativeButton("Cancel", (dialogInterface, i) -> {
+                    // do something if cancel tapped
+                }).create().show();
     }
 
     @Override
@@ -87,10 +110,6 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
                 TodoItem item = items.get(position);
                 item.setFinished(isChecked);
                 items.set(position, item);
-                Log.i("MainActivity items", "");
-                for (TodoItem i : items) {
-                    Log.i("", i.getTitle() + " " + i.isFinished());
-                }
             }
 
             @Override
